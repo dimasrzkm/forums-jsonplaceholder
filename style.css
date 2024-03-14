@@ -131,6 +131,8 @@ body {
 .post-title {
   font-size: 1.3rem;
   font-weight: 600;
+  text-decoration: none;
+  color: var(--color-primary);
 }
 .post-author {
   margin-top: 4px;

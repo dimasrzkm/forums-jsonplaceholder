@@ -1,5 +1,6 @@
 const chunkSize = 5;
 const allPostsChunk = [];
+let allPostTitle = [];
 let indexChunks = 0;
 
 let buttonLoad = document.querySelector(".btn-load");
@@ -34,7 +35,7 @@ Promise.all(urlPostsWithUsers.map((item) => fetchData(item)))
       };
     });
 
-    // allPosts = [...usersPosts];
+    // make chunks
     for (let i = 0; i < usersPosts.length; i += chunkSize) {
       const chunk = usersPosts.slice(i, i + chunkSize);
       allPostsChunk.push(chunk);
@@ -43,17 +44,33 @@ Promise.all(urlPostsWithUsers.map((item) => fetchData(item)))
     loading.classList.add("hidden");
     buttonLoad.classList.remove("hidden");
 
-    allPostsChunk[indexChunks].forEach((chunk) => {
-      document.querySelector(".container").innerHTML += templateHtml(chunk);
-    });
-    indexChunks += 1;
+    renderChunks();
+
+    getAllPostTitle();
   })
   .catch((err) => console.error(err));
+
+function renderChunks() {
+  allPostsChunk[indexChunks].forEach((chunk) => {
+    document.querySelector(".container").innerHTML += templateHtml(chunk);
+  });
+  indexChunks += 1;
+}
+
+function getAllPostTitle() {
+  allPostTitle = [...document.querySelectorAll(".post-title")];
+
+  allPostTitle.forEach((postTitle) => {
+    postTitle.addEventListener("click", function (event) {
+      localStorage.setItem("id", event.target.dataset["id"]);
+    });
+  });
+}
 
 function templateHtml(data) {
   return (template = `
         <section class="posts">
-          <h3 class="post-title">${data.title}</h3>
+          <a href="post.html" class="post-title" data-id="${data.id}">${data.title}</a>
           <div class="post-author">
             <h4 class="author">${data.name}</h4>
             <p class="author-username">${data.username}</p>
@@ -64,7 +81,7 @@ function templateHtml(data) {
             </p>
           </div>
           <div class="post-comments">
-            <a href="#" class="comment">
+            <p class="comment">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -78,8 +95,7 @@ function templateHtml(data) {
                   stroke-linejoin="round"
                   d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
                 /></svg
-              >See Answer</a
-            >
+              >See Answer</p>
           </div>
       </section>
     `);
@@ -87,10 +103,9 @@ function templateHtml(data) {
 
 buttonLoad.addEventListener("click", function () {
   if (indexChunks <= allPostsChunk.length - 1) {
-    allPostsChunk[indexChunks].forEach((chunk) => {
-      document.querySelector(".container").innerHTML += templateHtml(chunk);
-    });
-    indexChunks += 1;
+    renderChunks();
+
+    getAllPostTitle();
   } else {
     buttonLoad.classList.add("hidden");
   }
