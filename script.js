@@ -91,5 +91,7 @@ buttonLoad.addEventListener("click", function () {
       document.querySelector(".container").innerHTML += templateHtml(chunk);
     });
     indexChunks += 1;
+  } else {
+    buttonLoad.classList.add("hidden");
   }
 });
