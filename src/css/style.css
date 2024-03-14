@@ -239,3 +239,32 @@ body {
   margin-left: 8px;
   margin-right: 8px;
 }
+.menu-responsive-bar {
+  display: none;
+}
+/* Responsive */
+@media (max-width: 540px) {
+  .navbar-menu-link,
+  .navbar-signup {
+    display: none;
+  }
+  .menu-responsive-bar {
+    display: block;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+  }
+  .post-title {
+    font-size: 1rem;
+  }
+  .user-comments-name {
+    font-size: 0.85rem;
+  }
+  .user-comments-email {
+    font-size: 0.75rem;
+  }
+  .user-comments-body, .comment-reply, .comment-like, .comment-share {
+    font-size: 0.85rem;
+  }
+}
+/* End Responsive */
